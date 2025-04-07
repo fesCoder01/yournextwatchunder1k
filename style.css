@@ -1,0 +1,66 @@
+/* بِسْمِ ٱللَّٰهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ */
+* {
+    font-family: 'Work Sans';
+}
+
+.row {
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 3vh;
+    width: fit-content;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.left-item,
+.right-item {
+    display: flex;
+    flex-wrap: wrap;
+    margin-left: 2.5vw;
+    margin-right: 2.5vw;
+}
+
+.description {
+    margin-left: 1vw;
+    margin-top: 10vh;
+}
+
+.description th {
+    text-align: left;
+}
+
+.details {
+    font-weight: bold;
+}
+
+.watch {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.watch img {
+    height: 50vh;
+    margin-left: 1vw;
+    margin-bottom: 1vw;
+}
+
+@media (max-width: 768px) {
+    .left-item,
+.right-item {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.description {
+    margin-left: 1vw;
+    margin-top: 1vh;
+    margin-bottom: 1vh;
+}
+}
