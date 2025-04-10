@@ -2,7 +2,13 @@
 * {
     font-family: 'Work Sans';
 }
-
+h1,h2{
+    text-align: center;
+}
+p{
+    margin-left: 10vw;
+    margin-right: 10vw;
+}
 .row {
     margin-left: auto;
     margin-right: auto;
