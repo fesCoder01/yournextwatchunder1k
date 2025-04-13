@@ -1,6 +1,7 @@
 /* بِسْمِ ٱللَّٰهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ */
 * {
     font-family: 'Work Sans';
+    color: #202529;
 }
 h1,h2{
     text-align: center;
@@ -34,7 +35,17 @@ p{
 .description th {
     text-align: left;
 }
+.order{
+    border-radius: 2px;
+    outline: 2px solid black;
+}
 
+.order th{
+padding: 1vh 0vh 1vh 1vh;
+}
+.order td{
+    padding: 1vh 1vh 1vh 0vh;
+    }
 .details {
     font-weight: bold;
 }
