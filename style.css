@@ -6,10 +6,6 @@
 h1,h2{
     text-align: center;
 }
-p{
-    margin-left: 10vw;
-    margin-right: 10vw;
-}
 .row {
     margin-left: auto;
     margin-right: auto;
@@ -36,19 +32,14 @@ p{
     text-align: left;
 }
 .order{
+    margin-top: 5vh;
     border-radius: 2px;
     outline: 2px solid black;
 }
-
-.order th{
-padding: 1vh 0vh 1vh 1vh;
-}
 .order td{
     padding: 1vh 1vh 1vh 0vh;
+    text-align: right;
     }
-.details {
-    font-weight: bold;
-}
 
 .watch {
     box-sizing: border-box;
