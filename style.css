@@ -19,8 +19,6 @@ h1,h2{
 .right-item {
     display: flex;
     flex-wrap: wrap;
-    margin-left: 2.5vw;
-    margin-right: 2.5vw;
 }
 
 .description {
@@ -30,14 +28,17 @@ h1,h2{
 .description th {
     text-align: left;
 }
+
 table {
 margin-bottom: 2vh;
 }
-a{
-    padding: 1px 10px 1px 10px;
+
+.order{
+    padding: 3px 10px 3px 10px;
     border-radius: 5px;
     border: 2px solid black;
 }
+
 .watch {
     box-sizing: border-box;
     display: flex;
@@ -59,6 +60,26 @@ a{
     max-width: 100%;
     max-height: 100%;
     object-fit: contain;
+}
+footer{
+    background-color: #f8f9fb;
+    padding: 20px;
+    text-align: center;
+    border-top: 1px solid grey;
+}
+
+footer a:visited{
+    color: inherit;  
+}
+
+.h1-about, .h2-about{
+    margin-left: 5%;
+    text-align: left;
+}
+.p-about{
+    text-align: justify;
+    margin-left: 5%;
+    margin-right: 5%;
 }
 
 @media (max-width: 768px) {
