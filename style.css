@@ -6,6 +6,9 @@
 h1,h2{
     text-align: center;
 }
+h1 > img{
+    width: 2vw;
+}
 .row {
     margin-left: auto;
     margin-right: auto;
