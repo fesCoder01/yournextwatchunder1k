@@ -88,6 +88,61 @@ footer a:visited{
     margin-left: 5%;
     margin-right: 5%;
 }
+  .filter-panel-wrapper {
+    position: relative;
+    display: flex;
+    justify-content: flex-end;
+    margin: 1rem 2rem 1rem auto;
+  }
+  .hamburger {
+    font-size: 24px;
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+  .filter-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: #f4f4f4;
+    padding: 20px;
+    width: 250px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    z-index: 1000;
+  }
+  .filter-section {
+    margin-bottom: 1rem;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 0.5rem;
+  }
+  .filter-section button.toggle-section {
+    background: none;
+    border: none;
+    font-weight: bold;
+    width: 100%;
+    text-align: left;
+    font-size: 1rem;
+    padding: 0.5rem 0;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .toggle-section .icon {
+    font-weight: bold;
+  }
+  .section-options.hidden {
+    display: none;
+  }
+  .filter-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1rem;
+  }
+  .hidden {
+    display: none;
+  }
 
 @media (max-width: 768px) {
     .left-item,

@@ -29,6 +29,39 @@
 <body>
     <h1>Best Watches Under 1k⌚</h1>
     <h2>A curated list of some best affordable watches for men.</h2>
+<div class="filter-panel-wrapper">
+  <button id="filterToggle" class="hamburger">
+    &#9776;
+  </button>
+  <aside id="filterMenu" class="filter-menu hidden">
+    <form id="filterForm">
+      <div class="filter-section" data-filter="brand">
+        <button type="button" class="toggle-section"><span class="label">Marque</span><span class="icon">+</span></button>
+        <div class="section-options hidden"></div>
+      </div>
+      <div class="filter-section" data-filter="movement">
+        <button type="button" class="toggle-section"><span class="label">Mouvement</span><span class="icon">+</span></button>
+        <div class="section-options hidden"></div>
+      </div>
+      <div class="filter-section" data-filter="size">
+        <button type="button" class="toggle-section"><span class="label">Taille</span><span class="icon">+</span></button>
+        <div class="section-options hidden"></div>
+      </div>
+      <div class="filter-section" data-filter="range">
+        <button type="button" class="toggle-section"><span class="label">Prix</span><span class="icon">+</span></button>
+        <div class="section-options hidden"></div>
+      </div>
+      <div class="filter-section" data-filter="style">
+        <button type="button" class="toggle-section"><span class="label">Style</span><span class="icon">+</span></button>
+        <div class="section-options hidden"></div>
+      </div>
+      <div class="filter-actions">
+        <button type="submit">Appliquer</button>
+        <button type="button" id="clearFilters">Réinitialiser</button>
+      </div>
+    </form>
+  </aside>
+</div>
     <div class="row">
         <div class="left-item" data-brand="Casio" data-movement="Quartz" data-size="38mm" data-range="< $100" data-style="digital edc diver grey resin">
             <div class="watch">
