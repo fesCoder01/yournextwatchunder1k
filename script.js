@@ -93,17 +93,23 @@ form.addEventListener("submit", (e) => {
         const row = document.createElement('div');
         row.className = 'row';
 
-        // Add left item
+        // Create left item
         const leftItem = visibleWatches[i].cloneNode(true);
-        leftItem.className = 'left-item';
-        row.appendChild(leftItem);
 
-        // Add right item if exists
-        if (i + 1 < visibleWatches.length) {
+        // Check if this is the last item with no pair
+        if (i + 1 >= visibleWatches.length) {
+            // Single item in row
+            leftItem.className = 'single-item';
+        } else {
+            leftItem.className = 'left-item';
+
             const rightItem = visibleWatches[i + 1].cloneNode(true);
             rightItem.className = 'right-item';
             row.appendChild(rightItem);
         }
+
+        row.appendChild(leftItem);
+
 
         rowsContainer.insertBefore(row, document.querySelector('footer'));
     }
@@ -117,25 +123,22 @@ const originalRowsHTML = Array.from(document.querySelectorAll('.row')).map(row =
 
 clearBtn.addEventListener("click", (e) => {
     e.preventDefault();
-    
+
     // 1. Reset all checkboxes
     form.reset();
-    
+
     // 2. Remove all current rows
     const rowsContainer = document.querySelector('body');
     document.querySelectorAll('.row').forEach(row => row.remove());
-    
+
     // 3. Recreate original rows from stored HTML
     originalRowsHTML.forEach(rowHTML => {
         const tempDiv = document.createElement('div');
         tempDiv.innerHTML = rowHTML;
         rowsContainer.insertBefore(tempDiv.firstChild, document.querySelector('footer'));
     });
-    
+
     // 4. Reset filter UI state
     document.querySelectorAll(".section-options").forEach(sec => sec.classList.add("hidden"));
     document.querySelectorAll(".toggle-section .icon").forEach(icon => icon.textContent = "+");
-    
-    // 5. Close filter menu
-    filterMenu.classList.add("hidden");
 });
