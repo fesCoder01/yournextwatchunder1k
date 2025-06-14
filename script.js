@@ -30,40 +30,42 @@ const values = {};
 filters.forEach(attr => values[attr] = new Set());
 
 watches.forEach(watch => {
-    filters.forEach(attr => {
-        if (attr === 'style') {
-            const val = watch.dataset[attr];
-            const styleVals = val.split(" ");
-            styleVals.forEach(v => values[attr].add(v));
+    const styleString = watch.dataset["style"];
+    const styleVals = styleString.split(" ");
 
-            // First value = Displayed
-            const first = styleVals[0];
-            if (first) {
-                values["displayed"].add(first);
-                watch.dataset["displayed"] = first;
-            }
+    // 1. Extract first, penultimate, and last values
+    const first = styleVals[0];
+    const penultimate = styleVals[styleVals.length - 2];
+    const last = styleVals[styleVals.length - 1];
 
-            // Second-to-last = dialColor
-            const penultimate = styleVals[styleVals.length - 2];
-            if (penultimate) {
-                values["dialColor"].add(penultimate);
-                watch.dataset["dialColor"] = penultimate;
-            }
+    // 2. Assign to synthetic attributes
+    if (first) {
+        values["displayed"].add(first);
+        watch.dataset["displayed"] = first;
+    }
+    if (penultimate) {
+        values["dialColor"].add(penultimate);
+        watch.dataset["dialColor"] = penultimate;
+    }
+    if (last) {
+        values["strapMaterial"].add(last);
+        watch.dataset["strapMaterial"] = last;
+    }
 
-            // Last = strapMaterial
-            const last = styleVals[styleVals.length - 1];
-            if (last) {
-                values["strapMaterial"].add(last);
-                watch.dataset["strapMaterial"] = last;
-            }
-        } else if (!["dialColor", "strapMaterial", "displayed"].includes(attr)) {
-            const val = watch.dataset[attr];
-            if (val) values[attr].add(val);
+    // 3. Assign middle style values to the style filter
+    styleVals.forEach((val, i) => {
+        if (i !== 0 && i !== styleVals.length - 2 && i !== styleVals.length - 1) {
+            values["style"].add(val);
         }
     });
+
+    // 4. Handle other filters normally
+    filters.forEach(attr => {
+        if (["style", "dialColor", "strapMaterial", "displayed"].includes(attr)) return;
+        const val = watch.dataset[attr];
+        if (val) values[attr].add(val);
+    });
 });
-
-
 
 filters.forEach(attr => {
     const container = form.querySelector(`[data-filter="${attr}"] .section-options`);
