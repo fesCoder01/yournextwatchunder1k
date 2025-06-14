@@ -25,20 +25,45 @@ form.querySelectorAll(".toggle-section").forEach(btn => {
 });
 
 const watches = document.querySelectorAll(".left-item, .right-item");
-const filters = ["brand", "movement", "size", "range", "style"];
+const filters = ["brand", "movement", "size", "range", "style", "dialColor", "strapMaterial", "displayed"];
 const values = {};
 filters.forEach(attr => values[attr] = new Set());
 
 watches.forEach(watch => {
     filters.forEach(attr => {
-        const val = watch.dataset[attr];
         if (attr === 'style') {
-            val.split(" ").forEach(v => values[attr].add(v));
-        } else {
-            values[attr].add(val);
+            const val = watch.dataset[attr];
+            const styleVals = val.split(" ");
+            styleVals.forEach(v => values[attr].add(v));
+
+            // First value = Displayed
+            const first = styleVals[0];
+            if (first) {
+                values["displayed"].add(first);
+                watch.dataset["displayed"] = first;
+            }
+
+            // Second-to-last = dialColor
+            const penultimate = styleVals[styleVals.length - 2];
+            if (penultimate) {
+                values["dialColor"].add(penultimate);
+                watch.dataset["dialColor"] = penultimate;
+            }
+
+            // Last = strapMaterial
+            const last = styleVals[styleVals.length - 1];
+            if (last) {
+                values["strapMaterial"].add(last);
+                watch.dataset["strapMaterial"] = last;
+            }
+        } else if (!["dialColor", "strapMaterial", "displayed"].includes(attr)) {
+            const val = watch.dataset[attr];
+            if (val) values[attr].add(val);
         }
     });
 });
+
+
 
 filters.forEach(attr => {
     const container = form.querySelector(`[data-filter="${attr}"] .section-options`);
