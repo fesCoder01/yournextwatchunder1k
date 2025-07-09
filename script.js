@@ -3,6 +3,7 @@ const toggleButton = document.getElementById("filterToggle");
 const filterMenu = document.getElementById("filterMenu");
 const form = document.getElementById("filterForm");
 const clearBtn = document.getElementById("clearFilters");
+const sortSelect = document.getElementById("sortSelect");
 
 toggleButton.addEventListener("click", (e) => {
     e.stopPropagation();
@@ -24,11 +25,33 @@ form.querySelectorAll(".toggle-section").forEach(btn => {
     });
 });
 
-const watches = document.querySelectorAll(".left-item, .right-item");
+// Get watches in their visual order (as they appear in rows)
+const rows = document.querySelectorAll('.row');
+const watches = [];
 const filters = ["brand", "movement", "size", "range", "style", "dialColor", "strapMaterial", "displayed"];
 const values = {};
 filters.forEach(attr => values[attr] = new Set());
 
+// Extract watches in visual order from rows and store their original positions
+rows.forEach((row, rowIndex) => {
+    const leftItem = row.querySelector('.left-item');
+    const rightItem = row.querySelector('.right-item');
+    
+    if (leftItem) {
+        leftItem.dataset.originalPosition = watches.length;
+        const watchName = leftItem.querySelector('span').textContent;
+        console.log(`Position ${watches.length}: ${watchName} (left)`);
+        watches.push(leftItem);
+    }
+    if (rightItem) {
+        rightItem.dataset.originalPosition = watches.length;
+        const watchName = rightItem.querySelector('span').textContent;
+        console.log(`Position ${watches.length}: ${watchName} (right)`);
+        watches.push(rightItem);
+    }
+});
+
+// Process watches for filters
 watches.forEach(watch => {
     const styleString = watch.dataset["style"];
     const styleVals = styleString.split(" ");
@@ -67,6 +90,7 @@ watches.forEach(watch => {
     });
 });
 
+// Build filter options
 filters.forEach(attr => {
     const container = form.querySelector(`[data-filter="${attr}"] .section-options`);
     Array.from(values[attr]).sort().forEach(val => {
@@ -86,12 +110,83 @@ filters.forEach(attr => {
     });
 });
 
+// Function to extract numeric price value from data-range
+function getPriceValue(rangeString) {
+    if (rangeString.includes('< $100')) {
+        return 50; // Midpoint of < $100 range
+    }
+    
+    const match = rangeString.match(/\$(\d+)-(\d+)/);
+    if (match) {
+        const min = parseInt(match[1]);
+        const max = parseInt(match[2]);
+        return (min + max) / 2; // Return midpoint of range
+    }
+    
+    return 0; // Default fallback
+}
+
+// Function to sort watches by price
+function sortWatches(watches, sortOrder) {
+    return [...watches].sort((a, b) => {
+        const priceA = getPriceValue(a.dataset.range);
+        const priceB = getPriceValue(b.dataset.range);
+        
+        if (sortOrder === 'low-high') {
+            if (priceA !== priceB) {
+                return priceA - priceB;
+            }
+            // If prices are equal, maintain original order using stored originalPosition
+            return parseInt(a.dataset.originalPosition) - parseInt(b.dataset.originalPosition);
+        } else if (sortOrder === 'high-low') {
+            if (priceA !== priceB) {
+                return priceB - priceA;
+            }
+            // If prices are equal, maintain original order using stored originalPosition
+            return parseInt(a.dataset.originalPosition) - parseInt(b.dataset.originalPosition);
+        }
+        return 0; // Default order
+    });
+}
+
+// Function to render watches in rows
+function renderWatches(watches) {
+    const rowsContainer = document.querySelector('body');
+    const existingRows = document.querySelectorAll('.row');
+    existingRows.forEach(row => row.remove());
+
+    for (let i = 0; i < watches.length; i += 2) {
+        const row = document.createElement('div');
+        row.className = 'row';
+
+        // Always use the original class for each watch
+        const firstItem = watches[i].cloneNode(true);
+        firstItem.className = watches[i].className;
+
+        if (i + 1 >= watches.length) {
+            // Single item in row
+            firstItem.className = 'single-item';
+            row.appendChild(firstItem);
+        } else {
+            const secondItem = watches[i + 1].cloneNode(true);
+            secondItem.className = watches[i + 1].className;
+            row.appendChild(firstItem);
+            row.appendChild(secondItem);
+        }
+        rowsContainer.insertBefore(row, document.querySelector('footer'));
+    }
+}
+
+// Filter form submission
 form.addEventListener("submit", (e) => {
     e.preventDefault();
     const formData = new FormData(form);
     const visibleWatches = [];
 
-    watches.forEach(watch => {
+    console.log("=== FILTERING ===");
+    // Filter watches in original order
+    watches.forEach((watch, index) => {
+        const watchName = watch.querySelector('span').textContent;
         let visible = true;
         for (const attr of filters) {
             const selected = formData.getAll(attr);
@@ -108,51 +203,46 @@ form.addEventListener("submit", (e) => {
         }
 
         if (visible) {
+            console.log(`Visible: ${watchName} (original pos: ${watch.dataset.originalPosition})`);
             visibleWatches.push(watch);
+        } else {
+            console.log(`Hidden: ${watchName}`);
         }
     });
 
-    const rowsContainer = document.querySelector('body');
-    const existingRows = document.querySelectorAll('.row');
-    existingRows.forEach(row => row.remove());
-
-    for (let i = 0; i < visibleWatches.length; i += 2) {
-        const row = document.createElement('div');
-        row.className = 'row';
-
-        // Create left item
-        const leftItem = visibleWatches[i].cloneNode(true);
-
-        // Check if this is the last item with no pair
-        if (i + 1 >= visibleWatches.length) {
-            // Single item in row
-            leftItem.className = 'single-item';
-        } else {
-            leftItem.className = 'left-item';
-
-            const rightItem = visibleWatches[i + 1].cloneNode(true);
-            rightItem.className = 'right-item';
-            row.appendChild(rightItem);
-        }
-
-        row.appendChild(leftItem);
-
-
-        rowsContainer.insertBefore(row, document.querySelector('footer'));
+    console.log("=== RENDERING ===");
+    // Apply current sorting if any
+    const currentSortOrder = sortSelect.value;
+    if (currentSortOrder !== 'default') {
+        const sortedWatches = sortWatches(visibleWatches, currentSortOrder);
+        console.log("Sorted order:");
+        sortedWatches.forEach((watch, index) => {
+            const watchName = watch.querySelector('span').textContent;
+            console.log(`${index}: ${watchName}`);
+        });
+        renderWatches(sortedWatches);
+    } else {
+        console.log("Original order (no sorting):");
+        visibleWatches.forEach((watch, index) => {
+            const watchName = watch.querySelector('span').textContent;
+            console.log(`${index}: ${watchName}`);
+        });
+        renderWatches(visibleWatches);
     }
 
     filterMenu.classList.add("hidden");
 });
 
-
 // Store the original rows HTML when page loads
 const originalRowsHTML = Array.from(document.querySelectorAll('.row')).map(row => row.outerHTML);
 
+// Clear filters
 clearBtn.addEventListener("click", (e) => {
     e.preventDefault();
 
-    // 1. Reset all checkboxes
+    // 1. Reset all checkboxes and sorting
     form.reset();
+    sortSelect.value = 'default';
 
     // 2. Remove all current rows
     const rowsContainer = document.querySelector('body');
@@ -168,4 +258,25 @@ clearBtn.addEventListener("click", (e) => {
     // 4. Reset filter UI state
     document.querySelectorAll(".section-options").forEach(sec => sec.classList.add("hidden"));
     document.querySelectorAll(".toggle-section .icon").forEach(icon => icon.textContent = "+");
+});
+
+// Sort dropdown event listener
+sortSelect.addEventListener("change", () => {
+    const sortOrder = sortSelect.value;
+    const currentWatches = document.querySelectorAll(".left-item, .right-item, .single-item");
+    
+    if (sortOrder === 'default') {
+        // Reset to original order
+        const rowsContainer = document.querySelector('body');
+        document.querySelectorAll('.row').forEach(row => row.remove());
+        originalRowsHTML.forEach(rowHTML => {
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = rowHTML;
+            rowsContainer.insertBefore(tempDiv.firstChild, document.querySelector('footer'));
+        });
+    } else {
+        // Sort and render
+        const sortedWatches = sortWatches(Array.from(currentWatches), sortOrder);
+        renderWatches(sortedWatches);
+    }
 });
