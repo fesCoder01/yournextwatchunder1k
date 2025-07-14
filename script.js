@@ -159,20 +159,19 @@ function renderWatches(watches) {
         const row = document.createElement('div');
         row.className = 'row';
 
-        // Always use the original class for each watch
+        // First item in the row
         const firstItem = watches[i].cloneNode(true);
-        firstItem.className = watches[i].className;
+        firstItem.className = (i + 1 >= watches.length) ? 'single-item' : 'left-item';
 
-        if (i + 1 >= watches.length) {
-            // Single item in row
-            firstItem.className = 'single-item';
-            row.appendChild(firstItem);
-        } else {
+        row.appendChild(firstItem);
+
+        // Second item in the row, if it exists
+        if (i + 1 < watches.length) {
             const secondItem = watches[i + 1].cloneNode(true);
-            secondItem.className = watches[i + 1].className;
-            row.appendChild(firstItem);
+            secondItem.className = 'right-item';
             row.appendChild(secondItem);
         }
+
         rowsContainer.insertBefore(row, document.querySelector('footer'));
     }
 }
@@ -258,25 +257,4 @@ clearBtn.addEventListener("click", (e) => {
     // 4. Reset filter UI state
     document.querySelectorAll(".section-options").forEach(sec => sec.classList.add("hidden"));
     document.querySelectorAll(".toggle-section .icon").forEach(icon => icon.textContent = "+");
-});
-
-// Sort dropdown event listener
-sortSelect.addEventListener("change", () => {
-    const sortOrder = sortSelect.value;
-    const currentWatches = document.querySelectorAll(".left-item, .right-item, .single-item");
-    
-    if (sortOrder === 'default') {
-        // Reset to original order
-        const rowsContainer = document.querySelector('body');
-        document.querySelectorAll('.row').forEach(row => row.remove());
-        originalRowsHTML.forEach(rowHTML => {
-            const tempDiv = document.createElement('div');
-            tempDiv.innerHTML = rowHTML;
-            rowsContainer.insertBefore(tempDiv.firstChild, document.querySelector('footer'));
-        });
-    } else {
-        // Sort and render
-        const sortedWatches = sortWatches(Array.from(currentWatches), sortOrder);
-        renderWatches(sortedWatches);
-    }
 });
