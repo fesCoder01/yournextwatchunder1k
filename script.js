@@ -176,6 +176,15 @@ function renderWatches(watches) {
     }
 }
 
+// Add a container for the 'no results' message if it doesn't exist
+let noResultsMsg = document.getElementById('noResultsMsg');
+if (!noResultsMsg) {
+    noResultsMsg = document.createElement('div');
+    noResultsMsg.id = 'noResultsMsg';
+    noResultsMsg.textContent = 'No result for search criteria';
+    document.body.insertBefore(noResultsMsg, document.querySelector('footer'));
+}
+
 // Filter form submission
 form.addEventListener("submit", (e) => {
     e.preventDefault();
@@ -208,6 +217,13 @@ form.addEventListener("submit", (e) => {
             console.log(`Hidden: ${watchName}`);
         }
     });
+
+    // Show or hide the 'no results' message
+    if (visibleWatches.length === 0) {
+        noResultsMsg.style.display = 'block';
+    } else {
+        noResultsMsg.style.display = 'none';
+    }
 
     console.log("=== RENDERING ===");
     // Apply current sorting if any
@@ -257,4 +273,9 @@ clearBtn.addEventListener("click", (e) => {
     // 4. Reset filter UI state
     document.querySelectorAll(".section-options").forEach(sec => sec.classList.add("hidden"));
     document.querySelectorAll(".toggle-section .icon").forEach(icon => icon.textContent = "+");
+
+    // 5. Hide the 'no results' message
+    if (noResultsMsg) {
+        noResultsMsg.style.display = 'none';
+    }
 });

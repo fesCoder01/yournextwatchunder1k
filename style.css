@@ -150,6 +150,14 @@ footer a:visited{
     display: none;
   }
 
+  #noResultsMsg{
+    display : none;
+    text-align : center;
+    margin : 2em 0;
+    color: gray;
+
+  }
+
 @media (max-width: 768px) {
     .left-item,
 .right-item {
