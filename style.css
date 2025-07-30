@@ -182,15 +182,21 @@ footer a:visited {
 }
 
 @media (max-width: 768px) {
-
-  .left-item,
-  .right-item {
+  .row {
+    margin-bottom: 3vh;
+    width: fit-content;
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
     flex-wrap: wrap;
-    margin-right: auto;
+  }
+
+  .single-item {
+    flex: 0 0 50%;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
   }
 
   .description {
